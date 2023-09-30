@@ -4,12 +4,17 @@ Wants=network-online.target
 After=network.target network-online.target
 
 [Service]
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 SyslogIdentifier=nebula
-StandardOutput=syslog
-StandardError=syslog
+User={{ nebula_user }}
+Group={{ nebula_group }}
+Type=simple
+LimitNOFILE=65535
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStart={{ nebula_bin_directory }}/nebula -config /etc/nebula/config.yaml
 Restart=always
+KillSignal=SIGINT
 
 [Install]
 WantedBy=multi-user.target
